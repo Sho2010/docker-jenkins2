@@ -1,8 +1,0 @@
-groovy
-
-icon-shim
-cloudbees-folder
-matrix-auth
-
-mailer
-google-login

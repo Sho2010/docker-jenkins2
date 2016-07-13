@@ -11,26 +11,19 @@ import hudson.security.*
 import org.jenkinsci.plugins.googlelogin.GoogleOAuth2SecurityRealm
 
 def instance = Jenkins.getInstance()
+def env = System.getenv()
 
-// 通常のユーザを作る場合
-// def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-// hudsonRealm.createAccount("hoge","your_password")
-// instance.setSecurityRealm(hudsonRealm)
-// instance.save()
-
-// google login settings
-def clientId = "YOUR_GOOGLE_APP_CLIENT_ID"
-def clientSecret = "YOUR_GOOGLE_APP_SECRET"
-def domain = "google.com"
+def clientId = env["GOOGLE_APP_CLIENT_ID"]
+def clientSecret = env["GOOGLE_APP_SERCRET"]
+def domain = env["GOOGLE_ACCOUNT_DOMAIN"]
 
 def googleRealm = new GoogleOAuth2SecurityRealm(clientId, clientSecret, domain)
 instance.setSecurityRealm(googleRealm)
 instance.save()
 
-// Permission settings
+//A special group "authenticated" is also available, which represents all authenticated (logged in) users.
 def strategy = new GlobalMatrixAuthorizationStrategy()
-// strategy.add(Jenkins.ADMINISTER, "hoge")
-strategy.add(Jenkins.ADMINISTER, "sho20100@gmail.com")
+strategy.add(Jenkins.ADMINISTER, "authenticated")
 instance.setAuthorizationStrategy(strategy)
 instance.save()
 
